@@ -1,5 +1,18 @@
-# Vue 3 + Vite
+# Интернет-приложение «Склад небольшого магазина»
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Вариант задания
+ПР 2: Клиентская часть (Vue 3). Склад небольшого магазина.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## Инструкция по запуску
+1. Установите зависимости: `npm install`
+2. Запустите сервер разработки: `npm run dev`
+3. Откройте в браузере: `http://localhost:5173/`
+
+## Что сделано (ПР 2)
+- Создан проект на Vite + Vue 3.
+- Настроена маршрутизация (Vue Router) для 5 экранов + страница 404.
+- Реализован общий макет (шапка, основная область, подвал).
+- Созданы компоненты (AppHeader, AppFooter).
+- Реализован экран «Список товаров» с фильтрацией (поиском) и адаптивностью (360px).
+- Реализован экран «Карточка товара» с валидацией ввода.
+- Создан слой данных (`api/mockData.js`) с 15 тестовыми записями.

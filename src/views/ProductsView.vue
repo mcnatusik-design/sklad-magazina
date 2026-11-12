@@ -1,11 +1,27 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { products } from '../api/mockData.js'
+import { ref, computed, onMounted } from 'vue'
+import { getProducts } from '../api/products.js' // Импортируем функцию с сервера
 
 const searchQuery = ref('')
+const products = ref([]) // Теперь товары хранятся в ref
+
+// Функция загрузки данных с сервера
+const fetchProducts = async () => {
+  try {
+    products.value = await getProducts()
+  } catch (error) {
+    console.error(error)
+    alert('Не удалось загрузить товары с сервера')
+  }
+}
+
+// Вызываем загрузку при старте страницы
+onMounted(() => {
+  fetchProducts()
+})
 
 const filteredProducts = computed(() => {
-  return products.filter(product => 
+  return products.value.filter(product => 
     product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 })
@@ -25,13 +41,13 @@ const filteredProducts = computed(() => {
       <button class="btn-add" @click="$router.push('/product/1')">+ Добавить товар</button>
     </div>
 
-    <!-- Вот тут мы правильно обернули таблицу -->
+    <!-- Таблица товаров -->
     <div class="table-wrapper">
       <table class="products-table">
         <thead>
           <tr>
             <th>Название</th>
-            <th>Категория</th>
+            <th>ID Категории</th>
             <th>Цена (руб.)</th>
             <th>Остаток</th>
             <th>Действия</th>
@@ -40,7 +56,7 @@ const filteredProducts = computed(() => {
         <tbody>
           <tr v-for="product in filteredProducts" :key="product.id">
             <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
+            <td>{{ product.category_id }}</td>
             <td>{{ product.price }}</td>
             <td :class="{ 'low-stock': product.current_stock <= product.min_stock }">
               {{ product.current_stock }}
@@ -50,7 +66,7 @@ const filteredProducts = computed(() => {
             </td>
           </tr>
           <tr v-if="filteredProducts.length === 0">
-            <td colspan="5" style="text-align: center;">Товары не найдены</td>
+            <td colspan="5" style="text-align: center;">Товары не найдены или загружаются...</td>
           </tr>
         </tbody>
       </table>
@@ -81,7 +97,6 @@ const filteredProducts = computed(() => {
   padding: 8px 16px;
   cursor: pointer;
 }
-/* Обертка для скролла */
 .table-wrapper {
   overflow-x: auto;
 }
@@ -95,7 +110,7 @@ const filteredProducts = computed(() => {
   border: 1px solid #000;
   padding: 10px;
   text-align: left;
-  white-space: nowrap; /* Запрещает перенос текста на новую строку */
+  white-space: nowrap;
 }
 .products-table th {
   background-color: #fef3c7;
